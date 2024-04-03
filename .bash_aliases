@@ -5,8 +5,8 @@ alias l='ls -CF'
 
 # mv/cp/rm aliases
 alias mk='touch'
-alias mv='mv -Iv'
-alias mvdir='mv -rIv'
+alias mv='mv -iv'
+alias mvdir='mv -riv'
 alias cp='cp -i'
 alias cpdir='cp -ri'
 alias rm='rm -Iv'
@@ -21,8 +21,6 @@ alias bash_aliases='vim ~/.bash_aliases'
 alias vimrc='vim ~/.vimrc'
 # ToDo: alias dotfiles='go -> to the folder where i will put the dotfiles (set up symlinks)'
 
-# git
-alias glog='git log --all --graph --decorate'
 # misc
 alias wisecow='fortune | cowsay -W 80 '
 

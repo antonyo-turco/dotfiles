@@ -126,7 +126,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # initial quip from wisecow
-wisecow | bash /mnt/c/Users/anton/Desktop/somedir/center.sh
+wisecow | bash /mnt/c/Users/anton/Documents/dotfiles/center.sh
 
 echo "Hello! You are currently working on..."
 # print ubuntu PRETTY_NAME, figlets it, lolcats it
