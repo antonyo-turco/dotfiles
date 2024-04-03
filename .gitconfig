@@ -1,0 +1,16 @@
+[user]
+	email = antonyo.turco@gmail.com
+	name = antonyo.turco
+[init]
+	defaultBranch = main
+[alias]
+    # list all aliases
+    alias = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
+    # better log 
+	blog = log --graph --decorate --abbrev-commit --all
+    # add file/folder to .gitignore 
+    ignore = "!f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"
+    # fetch recommended ignores based on language
+    fetch-ignore = "!sh /mnt/c/Users/anton/Documents/dotfiles/fetch_ignore.sh"
+[core]
+	editor = vim
