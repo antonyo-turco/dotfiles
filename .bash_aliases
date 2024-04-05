@@ -13,7 +13,8 @@ alias rm='rm -Iv'
 alias rmdir='rm -rIv'
 
 # terminal navigation aliases and shortcuts
-alias goback='go ..'
+alias back='go ..'
+alias ..='go ..'
 alias desk='go /mnt/c/Users/anton/Desktop'
 alias uni='go /mnt/c/Users/anton/Desktop/Unilocale'
 alias bashrc='vim ~/.bashrc'
@@ -27,10 +28,18 @@ alias wisecow='fortune | cowsay -W 80 '
 
 ## useful functions ##
 # create new directory and cd into it
-mcd() { [[ "$1" ]] && mkdir -p "$1" && cd "$1"; }
+mcd() { 
+    [[ "$1" ]];
+    mkdir -p "$1";
+    cd "$1";
+}
 
 # better movement between folders
-go() { cd $1; echo "Present Working Directory: ${PWD}"; ll;}
+go() { 
+    cd $1;
+    echo "Present Working Directory: ${PWD}"; 
+    ll;
+}
 
 # open windows file explorer
 explore() {
@@ -44,13 +53,16 @@ explore() {
       # Check if the provided path is a valid directory
       if [ -d "$path" ]; then
         # If it's a valid directory, open it in the file explorer
-        explorer.exe "$path"
+        (cd $path; explorer.exe .;)
       else
         # If it's not a valid directory or path, print an error message
-        echo "Error: Invalid path or not a directory: $path"
+        echo "Error! Invalid path or not a directory: $path"
       fi
     fi
-
 } 
+
+lsf() { 
+    find -maxdepth 1 -type f -exec bash -c 'column <(ls -l "$@") <(file -b "$@" | cut -d, -f1)' _ {} + ; 
+}
 
 

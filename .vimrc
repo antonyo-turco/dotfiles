@@ -68,6 +68,9 @@ set expandtab
 " Do not save backup files.
 set nobackup
 
+" Do not save undo files
+set noundofile
+
 " Do not let cursor scroll below or above N number of lines when scrolling.
 set scrolloff=10
 
@@ -83,6 +86,11 @@ set ignorecase
 " Override the ignorecase option if searching for capital letters.
 " This will allow you to search specifically for capital letters.
 set smartcase
+
+" Fix indentation so that Vim will maintain the indentation of the precedent
+" line
+set autoindent
+set smartindent
 
 " Show partial command you type in the last line of the screen.
 set showcmd

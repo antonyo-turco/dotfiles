@@ -14,3 +14,6 @@
     fetch-ignore = "!sh /mnt/c/Users/anton/Documents/dotfiles/fetch_ignore.sh"
 [core]
 	editor = vim
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
