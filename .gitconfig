@@ -11,7 +11,7 @@
     # add file/folder to .gitignore 
     ignore = "!f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"
     # fetch recommended ignores based on language
-    fetch-ignore = "!sh /mnt/c/Users/anton/Documents/dotfiles/fetch_ignore.sh"
+    fetch-ignore = "!sh ./scripts/fetch_ignore.sh"
 [core]
 	editor = vim
 [credential "https://github.com"]
