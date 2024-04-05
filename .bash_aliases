@@ -1,5 +1,5 @@
 # ls aliases
-alias ll='ls -AohF'
+alias ll='ls -AohF --group-directories-first'
 alias la='ls -A'
 alias l='ls -CF'
 
