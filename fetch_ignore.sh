@@ -8,4 +8,6 @@ fi
 
 langUpperCase=$(echo $lang | sed 's/./\u&/')
 
-curl -s "https://raw.githubusercontent.com/github/gitignore/main/${langUpperCase}.gitignore" --output .gitignore
+echo "$langUpperCase" | figlet >> .gitignore
+
+curl -s "https://raw.githubusercontent.com/github/gitignore/main/${langUpperCase}.gitignore" >> .gitignore
