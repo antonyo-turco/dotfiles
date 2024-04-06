@@ -65,11 +65,16 @@ set tabstop=4
 " Use space characters instead of tabs.
 set expandtab
 
-" Do not save backup files.
-set nobackup
+" BACKUP, UNDO AND SWAP FILES
 
-" Do not save undo files
-set noundofile
+" Do not save backup and undo files.
+" set nobackup
+" set noundofile
+"
+" Set where undo (.un~), backup (.NAME~) and swap (.swp) files are saved
+set undodir=~/.vim/.undo/
+set backupdir=~/.vim/.backup/
+set directory=~/.vim/.swp/
 
 " Do not let cursor scroll below or above N number of lines when scrolling.
 set scrolloff=10
