@@ -8,6 +8,8 @@
     alias = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
     # better log 
 	blog = log --graph --decorate --abbrev-commit --all
+    # better branch
+    bbranch = branch -vv
     # add file/folder to .gitignore 
     ignore = "!f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"
     # fetch recommended ignores based on language
