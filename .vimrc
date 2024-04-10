@@ -74,7 +74,7 @@ set expandtab
 " Set where undo (.un~), backup (.NAME~) and swap (.swp) files are saved
 set undodir=~/.vim/.undo/
 set backupdir=~/.vim/.backup/
-set directory=~/.vim/.swp/
+set directory=~/.vim/.swap/
 
 " Do not let cursor scroll below or above N number of lines when scrolling.
 set scrolloff=10
@@ -129,8 +129,10 @@ set wildignore=*.docx,*.jpg,*.png,*.gif,*.pdf,*.pyc,*.exe,*.flv,*.img,*.xlsx
 " but it can sometimes be convenient.
 set mouse+=a
 
-" Set block cursor for all modes except insert
-set guicursor=n-v-c:block-nCursor/lCursor,ve:ver35-Cursor,o:hor50-Cursor,i-ci:ver25-Cursor/lCursor,r-cr:hor20-Cursor/lCursor,sm:block-Cursor-blinkwait175-blinkoff150-blinkon175
+" Change cursor shape in different modes
+let &t_EI = "\033[2 q" " NORMAL  █
+let &t_SI = "\033[5 q" " INSERT  |
+let &t_SR = "\033[3 q" " REPLACE _
 
 " Maintain cursor on the same column when scrolling vertically
 set virtualedit=all
@@ -161,9 +163,16 @@ set virtualedit=all
 " inoremap <Right> <ESC>:echoe "Use l"<CR>
 " inoremap <Up>    <ESC>:echoe "Use k"<CR>
 " inoremap <Down>  <ESC>:echoe "Use j"<CR>
+
 " Using home row keys to move to start/end of line
 map H ^
-map L $
+map L $ 
+
+" Copy and paste with system clipboard
+vmap <C-c> "+y
+vmap <C-v> c<ESC>"+p
+imap <C-v> <ESC>"+pa
+
 " }}}
 
 
