@@ -169,6 +169,7 @@ map H ^
 map L $ 
 
 " Copy and paste with system clipboard
+set clipboard=unnamedplus
 vmap <C-c> "+y
 vmap <C-v> c<ESC>"+p
 imap <C-v> <ESC>"+pa

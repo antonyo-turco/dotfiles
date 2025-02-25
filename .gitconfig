@@ -7,13 +7,13 @@
     # list all aliases
     alias = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
     # better log 
-	blog = log --graph --decorate --abbrev-commit --all
+	blog = log --graph --decorate --abbrev-commit
     # better branch
     bbranch = branch -vv
     # add file/folder to .gitignore 
     ignore = "!f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"
     # fetch recommended ignores based on language
-    fetch-ignore = "!sh ./scripts/fetch_ignore.sh"
+    fetch-ignore = "!sh /mnt/c/Users/anton/Documents/dotfiles/scripts/fetch_ignore.sh"
 [core]
 	editor = vim
 [credential "https://github.com"]
@@ -21,3 +21,8 @@
 	helper = !/usr/bin/gh auth git-credential
 [pull]
 	rebase = false
+[filter "nbstripout"]
+	clean = \"/usr/bin/python3\" -m nbstripout
+	smudge = cat
+[diff "ipynb"]
+	textconv = \"/usr/bin/python3\" -m nbstripout -t
