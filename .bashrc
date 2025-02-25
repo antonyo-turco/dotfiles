@@ -141,3 +141,4 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 wisecow | center.sh
          
 fastfetch
+bind 'set completion-ignore-case on'
