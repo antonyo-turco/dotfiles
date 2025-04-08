@@ -1,4 +1,4 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
+#rvm reinstall all --force ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
@@ -43,7 +43,7 @@ esac
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
 # should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+# force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -61,16 +61,27 @@ LIGHTBLUE="\[\033[1;34m\]"
 _RESET=$(tput sgr0)
 _BOLD=$(tput bold)
 
+# Set the prompt to include the current git branch if in a git repository
+parse_git_branch() {
+    if command -v git &> /dev/null; then
+        git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+    else
+        echo ""
+    fi
+}
 if [ "$color_prompt" = yes ]; then
     # original
     # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[00;34m\]\u@\h\[\033[00m\]:\[\033[01;34m\]${PWD#"${PWD%/*/*/*}/"}\[\033[00m\]\$ '
+    user_and_machine="\[\033[38;5;19m\]\u@\h\[\033[00m\]"
+    folder_structure="\[\033[01;34m\]${PWD#"${PWD%/*/*}/"}\[\033[00m\]"
+    git_branch="\[\033[33m\]\$(parse_git_branch)\[\033[00m\]"
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\W\$ '
+    user_and_machine="\u@\h"
+    folder_structure="${PWD#"${PWD%/*/*}/"}"
+    git_branch="\$(parse_git_branch)"
 fi
+PS1='${debian_chroot:+($debian_chroot)}'"$user_and_machine"':'"$folder_structure""$git_branch"'$ '
 unset color_prompt force_color_prompt
-
-
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
@@ -120,11 +131,12 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# Add dotfiles/scripts to PATH
+export PATH="$PATH:/mnt/c/Users/anton/Documents/dotfiles/scripts"
+
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 
-# Add dotfiles/scripts to PATH
-export PATH="$PATH:/mnt/c/Users/anton/Documents/dotfiles/scripts"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
@@ -141,4 +153,3 @@ eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 wisecow | center.sh
          
 fastfetch
-bind 'set completion-ignore-case on'
