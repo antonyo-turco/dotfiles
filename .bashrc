@@ -69,15 +69,35 @@ parse_git_branch() {
         echo ""
     fi
 }
+parse_directory() {
+    local pwd="$PWD"
+    if [[ "$pwd" == / ]]; then
+        echo -n "/"
+    else
+        local parent=$(dirname "$pwd")
+        if [[ "$parent" != / ]]; then
+            local grandparent=$(dirname "$parent")
+            if [[ "$grandparent" != / ]]; then
+                echo -n "${pwd#$grandparent/}"
+            else
+                echo -n "${pwd#/}"
+            fi
+        else
+            echo -n "${pwd#/}"
+        fi
+    fi
+}
+
+# Create the prompt
 if [ "$color_prompt" = yes ]; then
     # original
     # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
     user_and_machine="\[\033[38;5;19m\]\u@\h\[\033[00m\]"
-    folder_structure="\[\033[01;34m\]${PWD#"${PWD%/*/*}/"}\[\033[00m\]"
+    folder_structure="\[\033[01;34m\]\$(parse_directory)\[\033[00m\]"
     git_branch="\[\033[33m\]\$(parse_git_branch)\[\033[00m\]"
 else
     user_and_machine="\u@\h"
-    folder_structure="${PWD#"${PWD%/*/*}/"}"
+    folder_structure="\$(parse_directory)"
     git_branch="\$(parse_git_branch)"
 fi
 PS1='${debian_chroot:+($debian_chroot)}'"$user_and_machine"':'"$folder_structure""$git_branch"'$ '
