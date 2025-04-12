@@ -19,8 +19,8 @@
 	# add changes, then print status -s
 	sad = "!f() { git add \"$@\" && git status -s; }; f"
 	# squashes the last n commits together:
-    # see last 2 commits info
 	last = "!f() { count=${1:-2}; git log -\"$count\" HEAD --stat; }; f"
+    # see last 2 commits info
     squash = "!./scripts/git_squash.sh \"$@\""
 	search = !git rev-list --all | xargs git grep -F
 [core]
