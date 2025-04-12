@@ -4,6 +4,15 @@ alias la='ls -A'
 alias l='ls -CF'
 alias lt='tree --filesfirst --gitignore -L 3'
 
+# clear aliases
+alias c="clear"
+alias cl="clear"
+alias ckear="clear"
+alias clr="clear"
+
+# history aliases
+alias hgrep='history | grep -i'
+
 # mv/cp/rm aliases
 alias mk='touch'
 alias mkdir='mkdir -pv'

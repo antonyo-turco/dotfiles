@@ -5,17 +5,24 @@
 	defaultBranch = main
 [alias]
     # list all aliases
-    	alias = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
+    alias = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
     # better log 
-    	blog = log --graph --decorate --abbrev-commit
+    blog = log --graph --decorate --abbrev-commit
     # better branch
 	bbranch = branch -vv
     # reset to last commit
 	reboot = !git reset --hard HEAD | git clean -f | echo "Rebooted to last commit, changes uncommitted or untracked have been lost to the sands of time."
     # add file/folder to .gitignore 
-    	ignore = "!f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"
+	ignore = "!f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"
     # fetch recommended ignores based on language
-    	fetch-ignore = "!sh /mnt/c/Users/anton/Documents/dotfiles/scripts/fetch_ignore.sh"
+	fetch-ignore = "!sh /mnt/c/Users/anton/Documents/dotfiles/scripts/fetch_ignore.sh"
+	# add changes, then print status -s
+	sad = "!f() { git add \"$@\" && git status -s; }; f"
+	# squashes the last n commits together:
+    # see last 2 commits info
+	last = "!f() { count=${1:-2}; git log -\"$count\" HEAD --stat; }; f"
+    squash = "!./scripts/git_squash.sh \"$@\""
+	search = !git rev-list --all | xargs git grep -F
 [core]
 	editor = vim
 [credential "https://github.com"]

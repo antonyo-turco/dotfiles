@@ -1,7 +1,3 @@
-#rvm reinstall all --force ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
-
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -19,13 +15,14 @@ shopt -s histappend
 HISTSIZE=1000
 HISTFILESIZE=2000
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+# check the window size after each command and, if necessary, update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
+# If set, the pattern "**" used in a pathname expansion context will match all files and zero or more directories and subdirectories.
+shopt -s globstar
+
+# set autocompletion on tab to be case insensitive
+bind 'set completion-ignore-case on'
 
 # make less more friendly for non-text input files, see lesspipe(1)
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
@@ -69,15 +66,33 @@ parse_git_branch() {
         echo ""
     fi
 }
+parse_directory() {
+    local pwd="$PWD"
+    if [[ "$pwd" == / ]]; then
+        echo -n "/"
+    else
+        local parent=$(dirname "$pwd")
+        if [[ "$parent" != / ]]; then
+            local grandparent=$(dirname "$parent")
+            if [[ "$grandparent" != / ]]; then
+                echo -n "${pwd#$grandparent/}"
+            else
+                echo -n "${pwd#/}"
+            fi
+        else
+            echo -n "${pwd#/}"
+        fi
+    fi
+}
+
+# Create the prompt
 if [ "$color_prompt" = yes ]; then
-    # original
-    # PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ '
     user_and_machine="\[\033[38;5;19m\]\u@\h\[\033[00m\]"
-    folder_structure="\[\033[01;34m\]${PWD#"${PWD%/*/*}/"}\[\033[00m\]"
+    folder_structure="\[\033[01;34m\]\$(parse_directory)\[\033[00m\]"
     git_branch="\[\033[33m\]\$(parse_git_branch)\[\033[00m\]"
 else
     user_and_machine="\u@\h"
-    folder_structure="${PWD#"${PWD%/*/*}/"}"
+    folder_structure="\$(parse_directory)"
     git_branch="\$(parse_git_branch)"
 fi
 PS1='${debian_chroot:+($debian_chroot)}'"$user_and_machine"':'"$folder_structure""$git_branch"'$ '
@@ -112,10 +127,6 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 # Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
