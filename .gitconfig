@@ -23,6 +23,7 @@
     # see last 2 commits info
 	last = "!f() { count=${1:-2}; git log -\"$count\" HEAD --stat; }; f"
 	search = !git rev-list --all | xargs git grep -F
+	s = status -s
 [core]
 	editor = vim
 [credential "https://github.com"]
