@@ -4,30 +4,37 @@
 [init]
 	defaultBranch = main
 [alias]
-    # list all aliases
-    alias = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
-    # better log 
-    blog = log --graph --decorate --abbrev-commit
-    # better branch
+	# list all aliases
+	alias = !git config --get-regexp alias | sed -re 's/alias\\.(\\S*)\\s(.*)$/\\1 = \\2/g'
+	# better log 
+	blog = log --graph --decorate --abbrev-commit
+	# better branch
 	bbranch = branch -vv
-    # reset to last commit
+	# reset to last commit
 	reboot = !git reset --hard HEAD | git clean -f | echo "Rebooted to last commit, changes uncommitted or untracked have been lost to the sands of time."
-    # add file/folder to .gitignore 
+	# add file/folder to .gitignore 
 	ignore = "!f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"
-    # fetch recommended ignores based on language
+	# fetch recommended ignores based on language
 	fetch-ignore = "!sh /mnt/c/Users/anton/Documents/dotfiles/scripts/fetch_ignore.sh"
 	# add changes, then print status -s
 	sad = "!f() { git add \"$@\" && git status -s; }; f"
-	# squashes the last n commits together:
-	squash = !git_squash.sh \"$@\"
-    # see last 2 commits info
+	# see last 2 commits info
 	last = "!f() { count=${1:-2}; git log -\"$count\" HEAD --stat; }; f"
+	# squashes the last n commits together:
+	squash = "!./scripts/git_squash.sh \"$@\""
 	search = !git rev-list --all | xargs git grep -F
+	# removes a file from the staging area
+	unstage = "!f() { git restore --staged \"$@\"; git status -s; }; f"
+	# show the diffs in less
+	bdiff = "!f() { git diff --color \"$@\" | less -R; }; f"
+	# renames branch 
+	branch-rename = "!f() {\n    if [ \"$#\" -ne 2 ]; then\n        echo \"Usage: git branch-rename OLD_BRANCH NEW_BRANCH\";\n        return 1;\n    fi;\n    OLD=\"$1\";\n    NEW=\"$2\";\n    # Rename local branch\n    git branch -m \"$OLD\" \"$NEW\";\n    # Rename remote branch (if it exists)\n    if git ls-remote --exit-code --heads origin \"$OLD\" >/dev/null 2>&1; then\n        git push origin --delete \"$OLD\";\n        git push origin \"$NEW\";\n        git push origin -u \"$NEW\";\n        # Reset upstream if it was tracking the old branch\n        if [ \"$(git rev-parse --abbrev-ref \"$NEW\"@{upstream} 2>/dev/null)\" = \"origin/$OLD\" ]; then\n            git branch --unset-upstream \"$NEW\";\n            git branch --set-upstream-to=origin/\"$NEW\" \"$NEW\";\n        fi;\n    else\n        echo \"No remote branch origin/ found (only local branch was renamed)\";\n    fi;\n}; f"
+	# shows shortened status
+	s = status -sb
 [core]
 	editor = vim
 [credential "https://github.com"]
-	helper = 
-    helper = !/usr/bin/gh auth git-credential
+	helper = !/usr/bin/gh auth git-credential
 [pull]
 	rebase = false
 [filter "nbstripout"]
