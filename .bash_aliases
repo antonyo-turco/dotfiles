@@ -59,6 +59,44 @@ go() {
     ll;
 }
 
+context() {
+    local dir="${1:-$(pwd)}"  # Use provided directory or current directory if none given
+    local output="full_program.txt"
+    
+    # Validate input
+    if [ ! -d "$dir" ]; then
+        echo "Error: Directory '$dir' does not exist"
+        return 1
+    fi
+
+    # Clear output file
+    > "$output"
+
+    # Add directory tree structure at the beginning
+    echo "Directory structure:" >> "$output"
+    echo "====================" >> "$output"
+    tree "$dir" -P "*.c|*.h|Makefile|makefile" --prune | sed '/^$/d' | grep -v '^[0-9]' >> "$output"
+    echo >> "$output"
+    echo >> "$output"
+
+    # Process all .c, .h, and Makefiles
+    find "$dir" -type f \( -name "*.c" -o -name "*.h" -o -name "Makefile" -o -name "makefile" \) | while read -r file; do
+        # Get relative path
+        local rel_path="${file#$dir/}"
+        
+        # Add file header with relative path
+        echo "// $rel_path" >> "$output"
+        
+        # Add file content with proper escaping
+        echo "\"$(sed 's/"/\\"/g' "$file" | awk '{printf "%s\\n", $0}')\"" >> "$output"
+        
+        # Add spacing between files
+        echo >> "$output"
+    done
+
+    echo "Combined output saved to $output"
+}
+
 # open windows file explorer
 explore() {
 
