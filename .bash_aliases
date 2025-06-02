@@ -60,41 +60,55 @@ go() {
 }
 
 context() {
-    local dir="${1:-$(pwd)}"  # Use provided directory or current directory if none given
-    local output="full_program.txt"
+    local dir="${1:-$(pwd)}"  # Use provided directory or current directory
+    dir="${dir%/}"             # Remove trailing slash for consistent path handling
+    local output="context.txt"
     
     # Validate input
     if [ ! -d "$dir" ]; then
-        echo "Error: Directory '$dir' does not exist"
+        echo "Error: Directory '$dir' does not exist" >&2
         return 1
     fi
 
     # Clear output file
     > "$output"
 
-    # Add directory tree structure at the beginning
+    # Add directory tree structure (shows all files for context)
     echo "Directory structure:" >> "$output"
     echo "====================" >> "$output"
     tree "$dir" -P "*.c|*.h|Makefile|makefile" --prune | sed '/^$/d' | grep -v '^[0-9]' >> "$output"
     echo >> "$output"
     echo >> "$output"
 
-    # Process all .c, .h, and Makefiles
-    find "$dir" -type f \( -name "*.c" -o -name "*.h" -o -name "Makefile" -o -name "makefile" \) | while read -r file; do
-        # Get relative path
-        local rel_path="${file#$dir/}"
-        
-        # Add file header with relative path
+    file_list=()
+    if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
+        mapfile -t file_list < <(
+            git -C "$dir" ls-files \
+            | grep -E '\.c$|\.h$|(^|/)(Makefile|makefile)$'
+        )
+    else
+        while IFS= read -r f; do
+            file_list+=("${f#./}")
+        done < <(find "$dir" -maxdepth 1 -type f \( -name "*.c" -o -name "*.h" -o -name "Makefile" -o -name "makefile" \))
+    fi
+
+    printf '%s\n' "${file_list[@]}"
+
+    for rel_path in "${file_list[@]}"; do
+        file="$dir/$rel_path"
+
+        if file --mime "$file" | grep -q 'charset=binary'; then
+            echo "Skipping binary file: $rel_path" >&2
+            continue
+        fi
+
         echo "// $rel_path" >> "$output"
-        
-        # Add file content with proper escaping
         echo "\"$(sed 's/"/\\"/g' "$file" | awk '{printf "%s\\n", $0}')\"" >> "$output"
-        
-        # Add spacing between files
         echo >> "$output"
     done
 
     echo "Combined output saved to $output"
+
 }
 
 # open windows file explorer
