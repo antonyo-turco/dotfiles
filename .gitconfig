@@ -21,7 +21,13 @@
 	# see last 2 commits info
 	last = "!f() { count=${1:-2}; git log -\"$count\" HEAD --stat; }; f"
 	# squashes the last n commits together:
-	squash = "!./scripts/git_squash.sh \"$@\""
+	squash = "!f() { \
+        n=$1; \
+        if [ -z \"$n\" ]; then echo \"Usage: git squash <number_of_commits>\"; return 1; fi; \
+        msg=$(git log --format=\"- %s%n%w(0,5,5)%b\" -n $n | sed \"/^$/d\"); \
+        git reset --soft HEAD~$n && \
+        git commit -m \"Squashed $n commits\" -m \"$msg\"; \
+    }; f"
 	search = !git rev-list --all | xargs git grep -F
 	# removes a file from the staging area
 	unstage = "!f() { git restore --staged \"$@\"; git status -s; }; f"
