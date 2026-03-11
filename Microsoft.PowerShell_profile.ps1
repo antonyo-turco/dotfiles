@@ -39,3 +39,6 @@ function prompt {
   # Return a single space to position the cursor correctly
   " "
 }
+
+function ll { Get-ChildItem -Force -LiteralPath . | Format-List }
+Set-Alias -Name ll -Value ll
