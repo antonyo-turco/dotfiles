@@ -40,5 +40,88 @@ function prompt {
   " "
 }
 
+function createContext {
+ param(
+  [string]$Path = ".",
+  [string[]]$Include = @(
+   # Java / JVM
+   "java", "kt", "kts", "groovy", "gradle", "scala", "clj",
+   # .NET
+   "cs", "fs", "vb", "csx", "csproj", "fsproj", "vbproj", "sln", "razor", "cshtml",
+   # Web
+   "html", "htm", "css", "scss", "sass", "less", "js", "jsx", "ts", "tsx",
+   "vue", "svelte", "astro", "ejs", "hbs", "pug", "jade",
+   # Python
+   "py", "pyw", "pyi", "pyx", "ipynb",
+   # Ruby
+   "rb", "erb", "rake", "gemspec",
+   # PHP
+   "php", "blade.php", "twig",
+   # Go / Rust / C / C++
+   "go", "rs", "c", "h", "cpp", "hpp", "cc", "cxx", "hxx",
+   # Swift / Objective-C
+   "swift", "m", "mm",
+   # Shell / Scripting
+   "sh", "bash", "zsh", "fish", "ps1", "psm1", "psd1", "bat", "cmd",
+   # Config / Data
+   "json", "jsonc", "json5", "xml", "yaml", "yml", "toml", "ini", "cfg",
+   "conf", "env", "properties", "plist",
+   # Markup / Docs
+   "md", "mdx", "txt", "rst", "adoc", "tex", "latex", "org",
+   # SQL / DB
+   "sql", "ddl", "dml", "plsql", "hql",
+   # DevOps / IaC
+   "tf", "tfvars", "hcl", "dockerfile", "dockerignore",
+   "vagrantfile", "jenkinsfile", "pipeline",
+   # CI/CD
+   "github", "gitlab-ci", "circleci", "travis",
+   # Build / Package
+   "makefile", "cmake", "gradle", "sbt", "pom", "build",
+   "package", "lock", "gemfile", "rakefile",
+   # Misc Config
+   "editorconfig", "gitignore", "gitattributes", "gitmodules",
+   "htaccess", "nginx", "prettierrc", "eslintrc", "babelrc",
+   "stylelintrc", "tsconfig", "browserslistrc",
+   # Data / Log
+   "csv", "tsv", "log", "diff", "patch",
+   # R / MATLAB / Julia
+   "r", "rmd", "m", "jl",
+   # Perl / Lua / Elixir / Erlang
+   "pl", "pm", "lua", "ex", "exs", "erl", "hrl",
+   # Haskell / OCaml / Lisp
+   "hs", "lhs", "ml", "mli", "el", "lisp", "scm", "rkt",
+   # Dart / Flutter
+   "dart",
+   # Zig / Nim / V
+   "zig", "nim", "v",
+   # Protobuf / GraphQL / Thrift
+   "proto", "graphql", "gql", "thrift",
+   # Terraform / Ansible
+   "tf", "tfstate", "ansible",
+   # Misc
+   "vim", "emacs", "nix", "dhall"
+  ),
+  [string]$Output
+ )
+
+ $resolvedPath = Resolve-Path $Path
+ $dirName = Split-Path -Leaf $resolvedPath
+
+ if (-not $Output) {
+  $tmpDir = Join-Path "$env:USERPROFILE\Documents\tmp"
+  if (-not (Test-Path $tmpDir)) { New-Item -Path $tmpDir -ItemType Directory -Force | Out-Null }
+  $Output = Join-Path $tmpDir "context_$dirName.txt"
+ }
+
+ $patterns = $Include | ForEach-Object { "*.$_" }
+
+ Get-ChildItem -Path "$resolvedPath\*" -Recurse -Include $patterns |
+  ForEach-Object { "--- $($_.FullName) ---"; Get-Content $_ } |
+  Out-File -Path $Output -Encoding UTF8
+
+ Write-Host "Context written to $Output" -ForegroundColor Green
+}
+
+
 function ll { Get-ChildItem -Force -LiteralPath . | Format-List }
 Set-Alias -Name ll -Value ll
