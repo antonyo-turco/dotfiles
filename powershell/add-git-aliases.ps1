@@ -24,7 +24,7 @@ Add-GitAlias -Name "blog" -Value "log --graph --decorate --abbrev-commit"
 Add-GitAlias -Name "bbranch" -Value "branch -vv"
 Add-GitAlias -Name "reboot" -Value '!git reset --hard HEAD | git clean -f | echo "Rebooted to last commit, changes uncommitted or untracked have been lost to the sands of time."'
 Add-GitAlias -Name "ignore" -Value '!"f() { echo $1 >> \"${GIT_PREFIX}.gitignore\"; }; f"'
-Add-GitAlias -Name "fetch-ignore" -Value '!sh /mnt/c/Users/anton/Documents/dotfiles/scripts/fetch_ignore.sh'
+Add-GitAlias -Name "fetch-ignore" -Value '!pwsh -NonInteractive -File "C:/Users/anton/Documents/dotfiles/powershell/scripts/Fetch-Ignore.ps1"'
 Add-GitAlias -Name "sad" -Value '!"f() { git add \"$@\" && git status -s; }; f"'
 Add-GitAlias -Name "last" -Value '!"f() { count=${1:-2}; git log -\"$count\" HEAD --stat; }; f"'
 Add-GitAlias -Name "squash" -Value '!"f() { \
